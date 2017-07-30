@@ -4,9 +4,8 @@ digraph overview {
     { 
 
         rank="min"
-        Aurora [ label="AWS Aurora (multi-AZ)", shape="rect"]
-        SQS [ label="AWS Simple Queue Service", shape="rect"]
-        SNS [ label="AWS Simple Notification Service", shape="rect"]
+        GCECloudSql [ label="GCE CloudSql", shape="rect"]
+        GCEPubSub [ label="GCE Pub/Sub Service", shape="rect"]
         GoogleMapsApi [label ="Google Maps API", shape="rect"]
         Stripe [label="Stripe", shape="rect"]
     }
@@ -15,7 +14,6 @@ digraph overview {
         rank ="same"
         DMS [ label="Driver Management System"]
         CMS [ label="Order Management System"]
-
     }
     {
         rank="max"
@@ -27,29 +25,29 @@ digraph overview {
     }
 
 
-    CMS -> SQS -> DMS [label="Delivery Needed \n (orderId, store id, customer address, time ready)"]
-    DMS -> SQS -> CMS [label="Order Complete \n (orderId)"]
+    CMS -> GCEPubSub -> DMS [label="Delivery Needed \n (orderId, store id, customer address, time ready)"]
+    DMS -> GCEPubSub -> CMS [label="Order Complete \n (orderId)"]
 
     PointOfSale -> CMS [label="Order"]
     CMS -> Stripe [label="Payments"]
   
-    DMS -> SNS -> DriverApp [label="Jobs available"]
+    DMS -> GCEPubSub -> DriverApp [label="Jobs available"]
     DriverApp -> DMS [label="Accept Job, Delivery Status Updates, Current Location"]
     DMS -> GoogleMapsApi [label="Optimized Route"]
     DMS -> DriverApp  [label="Optimized Route"]
-    DMS -> SNS [label="Order status"]
-    SNS -> CustomerSMS [label="Order status"]
-    SNS -> CustomerApp [label="Order status"]
-    DMS -> Aurora [dir="both", label="Persistence"]
-    CMS -> Aurora [dir="both", label="Persistence"]
-    CMS -> SNS [label="Specials, Wait times"]
+    DMS -> GCEPubSub [label="Order status"]
+    GCEPubSub -> CustomerSMS [label="Order status"]
+    GCEPubSub -> CustomerApp [label="Order status"]
+    DMS -> GCECloudSql [dir="both", label="Persistence"]
+    CMS -> GCECloudSql [dir="both", label="Persistence"]
+    CMS -> GCEPubSub [label="Specials, Wait times"]
 
     WebApp -> CMS [label="Order"]
     CustomerApp -> CMS [label="Order"]
     CMS -> WebApp [label="Menu, Store Locations, Wait times"]
     CMS -> CustomerApp [label="Menu, Store Locations, Wait times"]
-    SNS -> CustomerApp [label="Specials"]
-    SNS -> CustomerSMS [label="Specials"]
+    GCEPubSub -> CustomerApp [label="Specials"]
+    GCEPubSub -> CustomerSMS [label="Specials"]
     
   
 }
