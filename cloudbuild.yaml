@@ -1,8 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/java/mvn'
   args: ['package']
-  dir: 'src/DriverManagementSystem'
+  dir: 'DeliveryManagementSystem'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/pizzatent-175310/driver-management-system', '.']
-  dir: 'src/DriverManagementSystem/target'
+  dir: 'DeliveryManagementSystem/target'
 images: ['gcr.io/pizzatent-175310/driver-management-system']
