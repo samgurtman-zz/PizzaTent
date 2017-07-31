@@ -4,7 +4,6 @@
 
 # https://stackoverflow.com/questions/592620/check-if-a-program-exists-from-a-bash-script
 command -v jq >/dev/null 2>&1 || { echo >&2 "This script requires jq but it's not installed.  Aborting."; exit 1; }
-command -v kops >/dev/null 2>&1 || { echo >&2 "This script requires kops but it's not installed.  Aborting."; exit 1; }
 command -v aws >/dev/null 2>&1 || { echo >&2 "This script requires aws-cli but it's not installed.  Aborting."; exit 1; } 
 
 echo "Creating Kops IAM group"

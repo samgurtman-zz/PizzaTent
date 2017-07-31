@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: enmasse
+  name: console
+spec:
+  rules:
+  - host: enmasse.pizzatent.co.nz
+    http:
+      paths:
+      - backend:
+          serviceName: console
+          servicePort: 8080
