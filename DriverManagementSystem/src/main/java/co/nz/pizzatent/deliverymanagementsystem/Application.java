@@ -1,14 +1,12 @@
-package co.nz.pizzatent.drivermanagementsystem;
+package co.nz.pizzatent.deliverymanagementsystem;
 
-import co.nz.pizzatent.drivermanagementsystem.api.RestInteface;
-import co.nz.pizzatent.drivermanagementsystem.orders.OrderMessage;
-import co.nz.pizzatent.drivermanagementsystem.orders.OrderMessageProcessor;
+import co.nz.pizzatent.deliverymanagementsystem.orders.OrderMessage;
+import co.nz.pizzatent.deliverymanagementsystem.orders.OrderMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.Set;

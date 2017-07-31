@@ -1,4 +1,4 @@
-package co.nz.pizzatent.drivermanagementsystem;
+package co.nz.pizzatent.deliverymanagementsystem;
 
 import java.util.function.Consumer;
 

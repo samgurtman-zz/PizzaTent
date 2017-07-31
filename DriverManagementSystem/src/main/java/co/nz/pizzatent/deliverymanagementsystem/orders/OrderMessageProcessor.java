@@ -1,6 +1,6 @@
-package co.nz.pizzatent.drivermanagementsystem.orders;
+package co.nz.pizzatent.deliverymanagementsystem.orders;
 
-import co.nz.pizzatent.drivermanagementsystem.TypedConsumer;
+import co.nz.pizzatent.deliverymanagementsystem.TypedConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

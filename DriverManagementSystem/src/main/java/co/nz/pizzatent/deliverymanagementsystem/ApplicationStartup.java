@@ -1,4 +1,4 @@
-package co.nz.pizzatent.drivermanagementsystem;
+package co.nz.pizzatent.deliverymanagementsystem;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

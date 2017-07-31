@@ -1,4 +1,4 @@
-package co.nz.pizzatent.drivermanagementsystem;
+package co.nz.pizzatent.deliverymanagementsystem;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
