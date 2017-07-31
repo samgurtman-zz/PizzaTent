@@ -1,7 +1,9 @@
 ## Stack 
 * Kubernetes
-   * Run jobs
+   * Run containers
+* Google Container Builder
+   * Builds containers on Github trigger 
+* Github
+   * Source Controls
 * Helm
-   * Compose deployment stack 
-* Gitlab -> Github and Buildkite
-   * Use autoscaling gitlab runners
+   * Compose kubernetes stack and allow for updating

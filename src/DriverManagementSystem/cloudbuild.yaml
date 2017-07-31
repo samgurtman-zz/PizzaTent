@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/java/mvn'
+  args: ['package']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/pizzatent-175310/driver-management-system', '.']
+  dir: 'target'
+images: ['gcr.io/pizzatent-175310/driver-management-system']

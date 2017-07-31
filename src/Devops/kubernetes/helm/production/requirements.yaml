@@ -1,0 +1,4 @@
+dependencies:
+  - name: extermal-dns
+    version: 0.0.1
+    repository: https://github.com/rk295/charts/tree/rk-external-dns
