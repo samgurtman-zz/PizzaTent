@@ -1,4 +1,4 @@
-package co.nz.pizzatent.drivermanagementsystem.Orders;
+package co.nz.pizzatent.drivermanagementsystem.orders;
 
 public class OrderMessage {
     private String orderId;

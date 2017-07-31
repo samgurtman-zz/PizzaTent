@@ -24,8 +24,8 @@ public class MessageListener {
 
     private final Subscriber subscriber;
 
-    public <T> MessageListener(String gceProjectId, String topic, TypedConsumer<T> handler) {
-        String pubsubId = gceProjectId + "/" + topic;
+    public <T> MessageListener(String gceProjectId, String subscription, TypedConsumer<T> handler) {
+        String pubsubId = gceProjectId + "/" + subscription;
 
         MessageReceiver receiver = new StandardReceiver<>(pubsubId, handler);
 
@@ -35,7 +35,7 @@ public class MessageListener {
                         .setExecutorThreadCount(1)
                         .build();
 
-        SubscriptionName name = SubscriptionName.create(gceProjectId, topic);
+        SubscriptionName name = SubscriptionName.create(gceProjectId, subscription);
 
 
         subscriber = Subscriber.defaultBuilder(name, receiver).setExecutorProvider(executorProvider).build();
@@ -80,7 +80,7 @@ public class MessageListener {
                 entity = convertToEntity(bytes, handler.getType());
             }catch(Exception e){
                 logger.error("PubSub " + id + " message " + pubsubMessage.getMessageId() + " malformed: " + e);
-                ackReplyConsumer.nack();
+                ackReplyConsumer.ack();
             }
             if(entity != null) {
                 try {

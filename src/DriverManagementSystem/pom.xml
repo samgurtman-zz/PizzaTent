@@ -23,16 +23,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <google-cloud-pubsub.version>0.20.1-beta</google-cloud-pubsub.version>
+        <keycloak.version>3.1.0.Final</keycloak.version>
+
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jersey</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,7 +77,17 @@
 
     </dependencies>
 
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>${keycloak.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
     <build>
