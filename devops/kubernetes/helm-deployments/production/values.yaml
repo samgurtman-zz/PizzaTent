@@ -35,5 +35,3 @@ resources: {}
   #requests:
   #  cpu: 100m
   #  memory: 128Mi
-mysql:
-    databasePassword: ${MYSQL_DATABASE_PASSWORD}

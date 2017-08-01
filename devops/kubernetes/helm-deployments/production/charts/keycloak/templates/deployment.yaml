@@ -41,12 +41,14 @@ spec:
         - name: MYSQL_DATABASE
           value: {{ .Values.mysql.databaseName }}
         - name: MYSQL_USERNAME
-          value: {{ .Values.mysql.databaseUser }}
-        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "{{ .Release.Name }}-mysql"
-              key: database-password
+              name: "{{ .Release.Name }}-cloudsql-keycloak-user"
+              key: username
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-cloudsql-keycloak-user"
+              key: password
         ports:
         - name: http
           containerPort: {{ .Values.containerPort }}

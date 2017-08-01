@@ -12,4 +12,3 @@ logLevel: INFO
 mysql:
   databasePort: 3306
   databaseName: keycloak
-  databaseUser: keycloak-user
