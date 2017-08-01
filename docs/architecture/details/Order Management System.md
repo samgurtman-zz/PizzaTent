@@ -1,7 +1,7 @@
 ## Stack 
 * Spring Boot
 * Spring Security
-* JAX-RS
+* Spring MVC Rest
 * Docker
 * Stripe
 

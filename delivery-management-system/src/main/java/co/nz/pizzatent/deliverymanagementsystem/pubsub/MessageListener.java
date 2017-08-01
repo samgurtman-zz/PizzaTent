@@ -1,6 +1,7 @@
-package co.nz.pizzatent.deliverymanagementsystem;
+package co.nz.pizzatent.deliverymanagementsystem.pubsub;
 
 
+import co.nz.pizzatent.deliverymanagementsystem.TypedConsumer;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
@@ -24,6 +25,13 @@ public class MessageListener {
 
     private final Subscriber subscriber;
 
+    /***
+     *
+     * @param gceProjectId Google Cloud Engine Project Id
+     * @param subscription Google PubSub subscription to listen to
+     * @param handler function that processes received messages
+     * @param <T> type of received messages
+     */
     public <T> MessageListener(String gceProjectId, String subscription, TypedConsumer<T> handler) {
         String pubsubId = gceProjectId + "/" + subscription;
 
@@ -87,12 +95,18 @@ public class MessageListener {
                     handler.accept(entity);
                     ackReplyConsumer.ack();
                 } catch (Exception e) {
-                    logger.error("PubSub " + id + " message " + pubsubMessage.getMessageId() + " could not be consumed: " + e);
+                    logger.error("PubSub " + id + " message " + pubsubMessage.getMessageId() +
+                            " could not be consumed: " + e);
+                    // nack only on internal consumer error
                     ackReplyConsumer.nack();
                 }
             }
         }
 
+        /**
+         * PubSub messages should be base64 encoded. Thus we decode from base64 to a JSON string. Then we convert to a
+         * POJO
+         */
         private T convertToEntity(byte[] bytes, Class<T> clazz){
             String json = new String(Base64.getDecoder().decode(bytes), StandardCharsets.UTF_8);
             return gson.fromJson(json, clazz);

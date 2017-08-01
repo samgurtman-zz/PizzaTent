@@ -2,6 +2,7 @@ package co.nz.pizzatent.deliverymanagementsystem;
 
 import co.nz.pizzatent.deliverymanagementsystem.orders.OrderMessage;
 import co.nz.pizzatent.deliverymanagementsystem.orders.OrderMessageProcessor;
+import co.nz.pizzatent.deliverymanagementsystem.pubsub.MessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
