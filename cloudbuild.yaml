@@ -5,6 +5,10 @@ steps:
   args: ['package']
   dir: 'DeliveryManagementSystem'
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/pizzatent-175310/driver-management-system', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/driver-management-system:$BRANCH_NAME', '.']
   dir: 'DeliveryManagementSystem/target'
-images: ['gcr.io/pizzatent-175310/driver-management-system']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/driver-management-system:$BRANCH_NAME']
+- name: 'grc.io/$PROJECT_ID/helm-build'
+  args: ['upgrade','production','production']
+  dir: 'Devops/kubernetes/helm'

@@ -9,10 +9,7 @@ containerPort: 8080
 
 logLevel: INFO
 
-postgres:
+mysql:
   databasePort: 3306
   databaseName: keycloak
-  databaseUser: keycloak
-  databasePassword: keycloak
-  persistence:
-    path: /data/keycloak/mysql
+  databaseUser: keycloak-user
