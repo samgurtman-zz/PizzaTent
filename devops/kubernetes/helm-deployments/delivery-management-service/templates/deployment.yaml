@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    name:  {{ template "fullname" . }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      name: delivery-management-system
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        name:  {{ template "fullname" . }}
+    spec:
+      containers:
+        - name: delivery-management-system
+          image: gcr.io/pizzatent-175310/delivery-management-system:{{ .Values.image.tag }}
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+

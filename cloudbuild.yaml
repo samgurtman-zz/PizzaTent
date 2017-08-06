@@ -3,12 +3,18 @@ steps:
   env:
   - "GCE_PROJECT_ID=test-project"
   args: ['package']
-  dir: 'DeliveryManagementSystem'
+  dir: 'delivery-management-system'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/driver-management-system:$BRANCH_NAME', '.']
-  dir: 'DeliveryManagementSystem/target'
+  dir: 'delivery-management-system/target'
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/driver-management-system:$BRANCH_NAME']
+  args: ['push', 'gcr.io/$PROJECT_ID/delivery-management-system:$BRANCH_NAME']
 - name: 'grc.io/$PROJECT_ID/helm-build'
-  args: ['upgrade','production','production']
-  dir: 'Devops/kubernetes/helm'
+  args: ['upgrade','--install','scaffolding','scaffolding']
+  dir: 'devops/kubernetes/helm-deployments'
+- name: 'grc.io/$PROJECT_ID/helm-build'
+  args: ['upgrade','--install','keycloak','keycloak']
+  dir: 'devops/kubernetes/helm-deployments'
+- name: 'grc.io/$PROJECT_ID/helm-build'
+  args: ['upgrade','--install','delivery-management-system','delivery-management-system']
+  dir: 'devops/kubernetes/helm-deployments'

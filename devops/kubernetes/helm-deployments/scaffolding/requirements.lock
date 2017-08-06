@@ -1,0 +1,11 @@
+dependencies:
+- alias: ""
+  condition: ""
+  enabled: false
+  import-values: null
+  name: kube-lego
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  tags: null
+  version: 0.1.10
+digest: sha256:ede97f9bd391551e7fdbac9856287f112e7485ad07d02b63987f7da3cf3bf8cc
+generated: 2017-08-06T18:25:01.953769338+12:00

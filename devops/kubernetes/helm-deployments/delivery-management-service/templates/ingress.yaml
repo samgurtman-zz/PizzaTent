@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: production-ingress
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+ spec:
+  tls:
+  - secretName: {{ template "fullname" . }}-tls
+    hosts:
+    - {{ .Values.hostName }}
+  rules:
+    - host: dms.pizzatent.co.nz
+      http:
+        paths:
+          - backend:
+              serviceName: {{ template "fullname" . }}
+              servicePort: 80

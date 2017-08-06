@@ -1,0 +1,45 @@
+
+## Details about the image to be pulled.
+image:
+  name: registry.opensource.zalan.do/teapot/external-dns
+  tag: v0.4.2
+  pullPolicy: IfNotPresent
+
+## This controls which types of resource external-dns should 'watch' for new
+## DNS entries.
+source:
+  - service
+
+## The DNS provider where the DNS records will be created (options: aws, google, inmemory, azure )
+provider: google
+
+## Limit possible target zones by a domain suffix (optional)
+# domainFilter:
+
+## Modify how DNS records are sychronized between sources and providers (options: sync, upsert-only )
+policy: sync
+
+## Annotations to be added to pods
+##
+# podAnnotations: {}
+
+extraArgs:
+  txt-owner-id: pizzatent
+  google-project: pizzatent-175310
+
+
+## CPU and Memory limit and request for external-dns
+resources: {}
+#  limits:
+#    memory: 50Mi
+#  requests:
+#    memory: 50Mi
+#    cpu: 10m
+
+# Should the chart create and use a service account.
+# serviceAccountEnabled: false
+
+# If creating a service account, you can optionally override the name used.
+# Defaults to .Release.Name-external-dns-sa. Note: Release.Name is always
+# included to prevent collisions.
+# saNameOverride:

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-managment-system-service
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: dms.pizzatent.co.nz.
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    name:  {{ template "fullname" . }}

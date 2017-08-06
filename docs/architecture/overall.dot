@@ -6,7 +6,6 @@ digraph overview {
         rank="min"
         GCECloudSql [ label="GCE CloudSql", shape="rect"]
         GCEPubSub [ label="GCE Pub/Sub Service", shape="rect"]
-        GoogleMapsApi [label ="Google Maps API", shape="rect"]
         Stripe [label="Stripe", shape="rect"]
     }
 
@@ -33,7 +32,6 @@ digraph overview {
   
     DMS -> GCEPubSub -> DriverApp [label="Jobs available"]
     DriverApp -> DMS [label="Accept Job, Delivery Status Updates, Current Location"]
-    DMS -> GoogleMapsApi [label="Optimized Route"]
     DMS -> DriverApp  [label="Optimized Route"]
     DMS -> GCEPubSub [label="Order status"]
     GCEPubSub -> CustomerSMS [label="Order status"]

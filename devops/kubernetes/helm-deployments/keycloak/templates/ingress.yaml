@@ -7,9 +7,8 @@ metadata:
     heritage: {{.Release.Service | quote }}
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
-    provider: "pizzatent"
   annotations:
-    kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
 spec:
   tls:
   - secretName: {{ .Chart.Name }}-tls
@@ -19,7 +18,6 @@ spec:
   - host: {{ .Values.hostName }}
     http:
       paths:
-      - path: /
-        backend:
+      - backend:
           serviceName: {{ template "fullname" . }}
           servicePort: 80

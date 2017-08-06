@@ -7,7 +7,8 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-    provider: "pizzatent"
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.hostName }}.
 spec:
   ports:
   - name: http
@@ -15,4 +16,4 @@ spec:
     targetPort: http
     protocol: TCP
   selector:
-    app: "{{ .Chart.Name }}"
+    name: {{ template "fullname" . }}

@@ -7,8 +7,7 @@ metadata:
     heritage: {{.Release.Service | quote }}
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
-    provider: "pizzatent"
-spec:
+    name: {{ template "fullname" . }}
   replicas: 1
   template:
     metadata:
@@ -17,41 +16,46 @@ spec:
         heritage: {{.Release.Service | quote }}
         release: {{.Release.Name | quote }}
         chart: "{{.Chart.Name}}-{{.Chart.Version}}"
-        provider: "pizzatent"
     spec:
       containers:
-      - name: {{ template "fullname" . }}
-        image: "jboss/keycloak-mysql:{{ .Values.keyCloakVersion }}"
-        imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+      - name: keycloak
+        image: jboss/keycloak-mysql:{{ .Values.image.tag }}
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: KEYCLOAK_LOGLEVEL
-          value: {{ .Values.logLevel }}
+          value: {{.Values.logLevel}}
         - name: KEYCLOAK_USER
-          value: {{ .Values.keycloakUser }}
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.credentials.keycloak.user}}
+              key: username
         - name: KEYCLOAK_PASSWORD
-          value: {{ .Values.keycloakPass }}
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.credentials.keycloak.user}}
+              key: password
         - name: MYSQL_PORT_3306_TCP_ADDR
-          value: {{ .Release.Name }}-mysql
-# this is more then a default value, it is the set value of all mysql
-# database servers
-        - name: MYSQL_PORT_3306_TCP_ADDR
-          value: {{ .Values.mysql.databaseUrl | quote }}
+          value: localhost
         - name: MYSQL_PORT_3306_TCP_PORT
-          value: {{ .Values.mysql.databasePort | quote }}
+          value: 3306
         - name: MYSQL_DATABASE
-          value: {{ .Values.mysql.databaseName }}
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.credentials.cloudsql.db}}
+              key: database
         - name: MYSQL_USERNAME
           valueFrom:
             secretKeyRef:
-              name: "{{ .Release.Name }}-cloudsql-keycloak-user"
+              name: {{.Values.credentials.cloudsql.db}}
               key: username
+        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "{{ .Release.Name }}-cloudsql-keycloak-user"
+              name: {{.Values.credentials.cloudsql.db}}
               key: password
         ports:
         - name: http
-          containerPort: {{ .Values.containerPort }}
+          containerPort: 8080
         livenessProbe:
           httpGet:
             path: /
@@ -67,7 +71,7 @@ spec:
       - image: gcr.io/cloudsql-docker/gce-proxy:1.10
         name: cloudsql-proxy
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                  "-instances={{ .Values.cloudsql.projectName }}:{{ .Values.cloudsql.regionName }}:{{ .Values.cloudsql.instanceName }}=tcp:3306",
+                  "-instances=pizzatent-175310:australia-southeast1:test-pizza-cloud-sql=tcp:3306",
                   "-credential_file=/secrets/cloudsql/credentials.json"]
         volumeMounts:
           - name: cloudsql-instance-credentials
@@ -77,4 +81,12 @@ spec:
             mountPath: /etc/ssl/certs
           - name: cloudsql
             mountPath: /cloudsql
-      # [END proxy_container]
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: {{.Values.credentials.cloudsql.instance}}
+      - name: ssl-certs
+        hostPath:
+          path: /etc/ssl/certs
+      - name: cloudsql
+        emptyDir:

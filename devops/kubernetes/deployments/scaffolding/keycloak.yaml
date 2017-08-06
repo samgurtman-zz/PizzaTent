@@ -1,0 +1,81 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: keycloak
+        image: "jboss/keycloak-mysql:latest"
+        imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+        env:
+        - name: KEYCLOAK_LOGLEVEL
+          value: INFO
+        - name: KEYCLOAK_USER
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: username
+        - name: KEYCLOAK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: password
+        - name: MYSQL_PORT_3306_TCP_ADDR
+          value: localhost
+        - name: MYSQL_PORT_3306_TCP_PORT
+          value: 3306
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-credentials-keycloak
+              key: database
+        - name: MYSQL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-credentials-keycloak
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-credentials-keycloak
+              key: password
+        ports:
+        - name: http
+          containerPort: {{ .Values.containerPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 120
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.10
+        name: cloudsql-proxy
+        command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                  "-instances=pizzatent-175310:australia-southeast1:test-pizza-cloud-sql=tcp:3306",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          - name: cloudsql
+            mountPath: /cloudsql
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
+      - name: ssl-certs
+        hostPath:
+          path: /etc/ssl/certs
+      - name: cloudsql
+        emptyDir:
