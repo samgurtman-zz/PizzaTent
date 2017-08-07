@@ -1,12 +1,12 @@
-package co.nz.pizzatent.deliverymanagementsystem.service.ordering;
+package co.nz.pizzatent.deliverymanagementsystem.service.orders;
 
 import co.nz.pizzatent.deliverymanagementsystem.domain.order.OrderEntity;
 import co.nz.pizzatent.deliverymanagementsystem.domain.order.OrderRepository;
 import co.nz.pizzatent.deliverymanagementsystem.domain.order.OrderStatus;
 import co.nz.pizzatent.deliverymanagementsystem.domain.store.StoreEntity;
 import co.nz.pizzatent.deliverymanagementsystem.domain.store.StoreRepository;
-import co.nz.pizzatent.deliverymanagementsystem.service.routing.RoutingException;
-import co.nz.pizzatent.deliverymanagementsystem.service.routing.RoutingService;
+import co.nz.pizzatent.deliverymanagementsystem.service.routes.RoutingException;
+import co.nz.pizzatent.deliverymanagementsystem.service.routes.RoutingService;
 import co.nz.pizzatent.deliverymanagementsystem.util.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,10 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Service to manipulate orders
@@ -25,7 +22,6 @@ import java.util.Set;
 @Component
 public class OrdersService {
 
-    private static final int MAX_DELIVERIES_PER_TRIP = 5;
 
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
@@ -53,8 +49,12 @@ public class OrdersService {
         if(orderEntity == null){
             throw new IllegalArgumentException("Order id does not exist!");
         }
-        orderEntity.setOrderStatus(OrderStatus.DELIVERED);
-        orderRepository.save(orderEntity);
+        if(orderEntity.getOrderStatus() == OrderStatus.AT_STORE || orderEntity.getOrderStatus() == OrderStatus.OUT_FOR_DELIVERY) {
+            orderEntity.setOrderStatus(OrderStatus.DELIVERED);
+            orderRepository.save(orderEntity);
+        }else{
+            throw new IllegalArgumentException("Order specified can not be completed, has status " + orderEntity.getOrderStatus());
+        }
     }
 
     /**
@@ -92,7 +92,7 @@ public class OrdersService {
         if(store == null){
             throw new IllegalArgumentException("Store id specified does not exist!");
         }
-        return orderRepository.findAllByOrderStatus(OrderStatus.AT_STORE);
+        return orderRepository.findAllByOriginStoreAndReadyTimeBeforeAndOrderStatusOrderByReadyTime(store, new Date(), OrderStatus.AT_STORE);
 
 
     }
@@ -101,7 +101,7 @@ public class OrdersService {
      * Generate the next required delivery trip for a given store
      * @param storeId id of store
      * @param maxSize total standard size units the delivery vehicle can accommodate
-     * @return Locations in order they should be visted
+     * @return Locations in order they should be visted or null if no pending orders could be packed into route
      * @throws RoutingException
      */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -110,24 +110,25 @@ public class OrdersService {
         if(store == null){
             throw new IllegalArgumentException("Store id specified does not exist!");
         }
-        PageRequest maxEntities = new PageRequest(0, MAX_DELIVERIES_PER_TRIP);
-        List<OrderEntity> orders = orderRepository.findAllByOriginStoreAndReadyTimeAfterAndOrderStatusOrderByReadyTime(
-                store, new Date(), OrderStatus.AT_STORE, maxEntities
-        );
+        List<OrderEntity> orders = orderRepository.findAllByOriginStoreAndReadyTimeBeforeAndOrderStatusOrderByReadyTime(
+                store, new Date(), OrderStatus.AT_STORE);
+
 
         int sizeUsed = 0;
         Set<Location> locationsOnTrip = new HashSet<>();
         for(OrderEntity order : orders){
-            sizeUsed += order.getSize();
-            if(sizeUsed < maxSize){
+            if(sizeUsed + order.getSize() <= maxSize){
                 locationsOnTrip.add(new Location(order.getDelvieryLatitude(), order.getDeliveryLongitude()));
                 order.setOrderStatus(OrderStatus.OUT_FOR_DELIVERY);
                 orderRepository.save(order);
-            }else{
-                break;
+                sizeUsed += order.getSize();
             }
+        }
+        if(locationsOnTrip.isEmpty()){
+            return null;
         }
         Location storeLocation = new Location(store.getLatitude(), store.getLongitude());
         return routingService.getRoute(storeLocation, locationsOnTrip);
     }
+
 }

@@ -3,8 +3,8 @@ package co.nz.pizzatent.deliverymanagementsystem.api.resources;
 
 import co.nz.pizzatent.deliverymanagementsystem.api.entities.TripRequest;
 import co.nz.pizzatent.deliverymanagementsystem.domain.order.OrderEntity;
-import co.nz.pizzatent.deliverymanagementsystem.service.ordering.OrdersService;
-import co.nz.pizzatent.deliverymanagementsystem.service.routing.RoutingException;
+import co.nz.pizzatent.deliverymanagementsystem.service.orders.OrdersService;
+import co.nz.pizzatent.deliverymanagementsystem.service.routes.RoutingException;
 import co.nz.pizzatent.deliverymanagementsystem.util.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

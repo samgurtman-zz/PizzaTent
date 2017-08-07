@@ -1,7 +1,7 @@
 package co.nz.pizzatent.deliverymanagementsystem.pubsub.orders;
 
 import co.nz.pizzatent.deliverymanagementsystem.pubsub.TypedConsumer;
-import co.nz.pizzatent.deliverymanagementsystem.service.ordering.OrdersService;
+import co.nz.pizzatent.deliverymanagementsystem.service.orders.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

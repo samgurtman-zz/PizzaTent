@@ -1,4 +1,4 @@
-package co.nz.pizzatent.deliverymanagementsystem.service.routing;
+package co.nz.pizzatent.deliverymanagementsystem.service.routes;
 
 /**
  * Represents an exception invoking OSRM routing engine

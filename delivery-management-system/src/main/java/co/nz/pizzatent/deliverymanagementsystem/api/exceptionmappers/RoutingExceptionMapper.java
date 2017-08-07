@@ -1,6 +1,6 @@
 package co.nz.pizzatent.deliverymanagementsystem.api.exceptionmappers;
 
-import co.nz.pizzatent.deliverymanagementsystem.service.routing.RoutingException;
+import co.nz.pizzatent.deliverymanagementsystem.service.routes.RoutingException;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;

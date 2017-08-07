@@ -1,4 +1,4 @@
-package co.nz.pizzatent.deliverymanagementsystem.service.routing;
+package co.nz.pizzatent.deliverymanagementsystem.service.routes;
 
 import co.nz.pizzatent.deliverymanagementsystem.util.Location;
 import org.junit.Assert;
@@ -15,8 +15,10 @@ import java.util.Set;
 
 @ActiveProfiles("development")
 @RunWith(SpringRunner.class)
-@SpringBootTest()
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RoutingServiceIT {
+
+
 
     @Autowired
     private RoutingService routingService;

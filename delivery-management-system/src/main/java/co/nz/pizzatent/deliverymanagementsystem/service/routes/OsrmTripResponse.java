@@ -1,4 +1,4 @@
-package co.nz.pizzatent.deliverymanagementsystem.service.routing;
+package co.nz.pizzatent.deliverymanagementsystem.service.routes;
 
 import co.nz.pizzatent.deliverymanagementsystem.util.Location;
 import com.fasterxml.jackson.annotation.JsonFormat;
