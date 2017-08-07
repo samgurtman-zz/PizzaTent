@@ -1,0 +1,35 @@
+version: '3.2'
+services:
+  pubsub-emulator:
+    build:
+      context: pubsub-emulator
+      dockerfile: Dockerfile
+    ports:
+    - 8086:8086
+    volumes:
+      - ./data/pubsub:/var/lib/pubsub
+  keycloak:
+    image: jboss/keycloak-mysql
+    ports:
+    - 8081:8080
+    environment:
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USERNAME=keycloak-dev
+      - MYSQL_PASSWORD=password
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - KEYCLOAK_PASSWORD=password
+      - KEYCLOAK_USER=admin
+    depends_on:
+      - mysql
+    restart: always
+  mysql:
+    image: mysql:5
+    ports:
+    - 3306:3306
+    volumes:
+      - ./data/mysql-db:/var/lib/mysql
+      - ./init-db.sql:/init-db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    command: ['mysqld','--init-file=/init-db.sql']

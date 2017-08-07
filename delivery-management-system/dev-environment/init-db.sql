@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS keycloak;
+CREATE DATABASE IF NOT EXISTS dms;
+
+CREATE USER  IF NOT EXISTS 'keycloak-dev'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'keycloak-dev'@'%';
+
+CREATE USER  IF NOT EXISTS 'dms-dev'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'dms-dev'@'%';

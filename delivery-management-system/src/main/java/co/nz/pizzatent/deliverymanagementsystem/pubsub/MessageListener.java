@@ -4,6 +4,7 @@ package co.nz.pizzatent.deliverymanagementsystem.pubsub;
 import co.nz.pizzatent.deliverymanagementsystem.TypedConsumer;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
+import com.google.cloud.ServiceOptions;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Subscriber;
@@ -26,15 +27,18 @@ public class MessageListener {
     private final Subscriber subscriber;
 
     /***
-     *
-     * @param gceProjectId Google Cloud Engine Project Id
-     * @param subscription Google PubSub subscription to listen to
      * @param handler function that processes received messages
      * @param <T> type of received messages
      */
-    public <T> MessageListener(String gceProjectId, String subscription, TypedConsumer<T> handler) {
-        String pubsubId = gceProjectId + "/" + subscription;
+    public <T> MessageListener(String subscription, TypedConsumer<T> handler) {
+        this(subscription, handler, null);
+    }
 
+    public <T> MessageListener(String subscription, TypedConsumer<T> handler, PubSubSettings pubSubSettings) {
+        String projectId = ServiceOptions.getDefaultProjectId();
+
+        SubscriptionName subscriptionName = SubscriptionName.create(projectId, subscription);
+        String pubsubId = subscriptionName.toString();
         MessageReceiver receiver = new StandardReceiver<>(pubsubId, handler);
 
         // Limit processing to one message at a time
@@ -43,14 +47,19 @@ public class MessageListener {
                         .setExecutorThreadCount(1)
                         .build();
 
-        SubscriptionName name = SubscriptionName.create(gceProjectId, subscription);
-
-
-        subscriber = Subscriber.defaultBuilder(name, receiver).setExecutorProvider(executorProvider).build();
+        Subscriber.Builder builder = Subscriber.defaultBuilder(subscriptionName, receiver);
+        if(pubSubSettings != null) {
+            if (pubSubSettings.getChannelProvider() != null) {
+                builder.setChannelProvider(pubSubSettings.getChannelProvider());
+            }
+            if (pubSubSettings.getCredentialsProvider() != null) {
+                builder.setCredentialsProvider(pubSubSettings.getCredentialsProvider());
+            }
+        }
+        subscriber = builder.setExecutorProvider(executorProvider).build();
         subscriber.addListener(new StandardStateListener(pubsubId), MoreExecutors.directExecutor());
 
     }
-
 
     public void startListening() {
         subscriber.startAsync().awaitRunning();

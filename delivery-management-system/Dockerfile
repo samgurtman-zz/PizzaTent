@@ -1,3 +1,3 @@
-FROM java:8-alpine
-COPY dms.jar .
-CMD ["java","-jar","dms.jar"]
+FROM java:8
+COPY target/dms.jar dms.jar
+ENTRYPOINT ["java","-jar","dms.jar"]
