@@ -1,6 +1,6 @@
 package co.nz.pizzatent.deliverymanagementsystem.configuration;
 
-import co.nz.pizzatent.deliverymanagementsystem.orders.OrderMessageProcessor;
+import co.nz.pizzatent.deliverymanagementsystem.pubsub.orders.OrderMessageProcessor;
 import co.nz.pizzatent.deliverymanagementsystem.pubsub.MessageListener;
 import co.nz.pizzatent.deliverymanagementsystem.pubsub.PubSubSettings;
 import com.google.api.gax.core.CredentialsProvider;

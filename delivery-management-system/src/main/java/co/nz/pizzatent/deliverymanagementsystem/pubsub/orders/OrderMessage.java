@@ -1,9 +1,11 @@
-package co.nz.pizzatent.deliverymanagementsystem.orders;
+package co.nz.pizzatent.deliverymanagementsystem.pubsub.orders;
+
+import co.nz.pizzatent.deliverymanagementsystem.util.Location;
 
 public class OrderMessage {
     private String orderId;
-    private String storeAddress;
-    private String customerAddress;
+    private String storeId;
+    private Location deliveryLocation;
     private int size;
     private long timeReady;
 
@@ -15,20 +17,20 @@ public class OrderMessage {
         this.orderId = orderId;
     }
 
-    public String getStoreAddress() {
-        return storeAddress;
+    public String getStoreId() {
+        return storeId;
     }
 
-    public void setStoreAddress(String storeAddress) {
-        this.storeAddress = storeAddress;
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
-    public String getCustomerAddress() {
-        return customerAddress;
+    public Location getDeliveryLocation() {
+        return deliveryLocation;
     }
 
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
+    public void setDeliveryLocation(Location deliveryLocation) {
+        this.deliveryLocation = deliveryLocation;
     }
 
     public int getSize() {

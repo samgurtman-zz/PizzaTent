@@ -33,3 +33,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
     command: ['mysqld','--init-file=/init-db.sql']
+  orsm:
+    image: osrm/osrm-backend:latest
+    volumes:
+    - ./data/orsm:/data
+    command: "osrm-extract -p /opt/car.lua /data/new-zealand-latest.osm.pbf && osrm-contract /data/new-zealand-latest.osrm && osrm-routed /data/new-zealand-latest.osrm"
+    ports:
+    - 5000:5000
