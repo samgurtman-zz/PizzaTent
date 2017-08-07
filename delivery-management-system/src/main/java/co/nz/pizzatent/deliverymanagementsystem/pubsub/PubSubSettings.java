@@ -3,6 +3,9 @@ package co.nz.pizzatent.deliverymanagementsystem.pubsub;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.grpc.ChannelProvider;
 
+/**
+ * Settings used to configure {@link MessageListener}
+ */
 public class PubSubSettings {
 
     private final ChannelProvider channelProvider;

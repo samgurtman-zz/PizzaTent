@@ -14,8 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Service to manipulate orders
+ */
 @Component
 public class OrdersService {
 
@@ -28,7 +34,6 @@ public class OrdersService {
     @Autowired
     public OrdersService(OrderRepository orderRepository, StoreRepository storeRepository, RoutingService routingService){
         this.routingService = routingService;
-
         this.orderRepository = orderRepository;
         this.storeRepository = storeRepository;
     }
@@ -38,6 +43,10 @@ public class OrdersService {
         return orderRepository.findByOrderId(orderId);
     }
 
+    /**
+     * Mark an order as delivered
+     * @param orderId id of order
+     */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void completeOrder(String orderId){
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
@@ -48,6 +57,14 @@ public class OrdersService {
         orderRepository.save(orderEntity);
     }
 
+    /**
+     * Add pending order to store
+     * @param storeId id of store
+     * @param orderId id of order
+     * @param deliveryLocation location where order should be delivered
+     * @param size standard size of order
+     * @param timeReady when the order is ready
+     */
     public void addOrder(String storeId, String orderId, Location deliveryLocation, int size, Date timeReady){
         StoreEntity store = storeRepository.findByStoreId(storeId);
         if(store == null){
@@ -65,6 +82,11 @@ public class OrdersService {
     }
 
 
+    /**
+     * Get pending orders for given store
+     * @param storeId id of store
+     * @return all orders with status {@link OrderStatus#AT_STORE}
+     */
     public List<OrderEntity> getPendingOrders(String storeId){
         StoreEntity store = storeRepository.findByStoreId(storeId);
         if(store == null){
@@ -75,6 +97,13 @@ public class OrdersService {
 
     }
 
+    /**
+     * Generate the next required delivery trip for a given store
+     * @param storeId id of store
+     * @param maxSize total standard size units the delivery vehicle can accommodate
+     * @return Locations in order they should be visted
+     * @throws RoutingException
+     */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<Location> createNextTrip(String storeId, int maxSize) throws RoutingException {
         StoreEntity store = storeRepository.findByStoreId(storeId);

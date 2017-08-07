@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,6 +26,13 @@ public class RoutingService {
     }
 
 
+    /**
+     * Get optimised route for given delivery locations
+     * @param storeLocation originating store location
+     * @param deliveryLocations locations where deliveries will occur
+     * @return list of locations to visit in order
+     * @throws RoutingException
+     */
     public List<Location> getRoute(Location storeLocation, Set<Location> deliveryLocations) throws RoutingException {
         List<Location> allLocations = new ArrayList<>();
         allLocations.add(storeLocation);

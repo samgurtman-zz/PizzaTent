@@ -13,6 +13,7 @@ digraph overview {
         rank ="same"
         DMS [ label="Driver Management System"]
         CMS [ label="Order Management System"]
+        RoutingEngine [label="OSRM Routing Engine"]
     }
     {
         rank="max"
@@ -26,10 +27,10 @@ digraph overview {
 
     CMS -> GCEPubSub -> DMS [label="Delivery Needed \n (orderId, store id, customer address, time ready)"]
     DMS -> GCEPubSub -> CMS [label="Order Complete \n (orderId)"]
-
     PointOfSale -> CMS [label="Order"]
     CMS -> Stripe [label="Payments"]
-  
+
+    DMS -> RoutingEngine [label="Optimized Routes"]
     DMS -> GCEPubSub -> DriverApp [label="Jobs available"]
     DriverApp -> DMS [label="Accept Job, Delivery Status Updates, Current Location"]
     DMS -> DriverApp  [label="Optimized Route"]

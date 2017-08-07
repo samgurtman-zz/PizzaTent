@@ -1,8 +1,8 @@
 package co.nz.pizzatent.deliverymanagementsystem.configuration;
 
-import co.nz.pizzatent.deliverymanagementsystem.pubsub.orders.OrderMessageProcessor;
 import co.nz.pizzatent.deliverymanagementsystem.pubsub.MessageListener;
 import co.nz.pizzatent.deliverymanagementsystem.pubsub.PubSubSettings;
+import co.nz.pizzatent.deliverymanagementsystem.pubsub.orders.OrderMessageProcessor;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.NoCredentialsProvider;
 import com.google.api.gax.grpc.ChannelProvider;
@@ -27,17 +27,20 @@ import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
 
+/**
+ * Configures Google PubSub client
+ */
 @Configuration
 public class PubSubConfig {
     private static final Logger logger = LogManager.getLogger();
 
     /**
-     * Set up the topics on the pubsub emulator
+     * Set up the topics on the PubSub emulator
      */
     private void initDevTopics(ChannelProvider channelProvider, CredentialsProvider credentialsProvider) throws IOException {
         String projectId = ServiceOptions.getDefaultProjectId();
 
-        //Very ugly but they've seem to have broken the easy way of setting this up
+        //Very ugly but they've broken the easy way of setting this
         TopicAdminSettings topicAdminSettings = TopicAdminSettings
                         .defaultBuilder()
                         .setTransportProvider(TopicAdminSettings.defaultGrpcTransportProviderBuilder().setChannelProvider(channelProvider).build())
@@ -64,12 +67,18 @@ public class PubSubConfig {
 
     }
 
+    /**
+     * Sets up to use the PubSub emulator
+     * @param pubsubEmulatorHost emulator port
+     * @return Settings used to configure {@link MessageListener}
+     * @throws IOException
+     */
     @Bean
     @Profile(Profiles.DEVELOPMENT)
     public PubSubSettings developmentSettings(
-            @Value("${PUBSUB_EMULATOR_HOST}") String pubsubEmulatorPort) throws IOException {
+            @Value("${PUBSUB_EMULATOR_HOST}") String pubsubEmulatorHost) throws IOException {
 
-        ManagedChannel channel = ManagedChannelBuilder.forTarget(pubsubEmulatorPort).usePlaintext(true).build();
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(pubsubEmulatorHost).usePlaintext(true).build();
         ChannelProvider channelProvider = FixedChannelProvider.create(channel);
         CredentialsProvider credentialsProvider = new NoCredentialsProvider();
         initDevTopics(channelProvider, credentialsProvider);

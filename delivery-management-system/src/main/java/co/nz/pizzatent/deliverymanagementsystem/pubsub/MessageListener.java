@@ -1,7 +1,6 @@
 package co.nz.pizzatent.deliverymanagementsystem.pubsub;
 
 
-import co.nz.pizzatent.deliverymanagementsystem.TypedConsumer;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
 import com.google.cloud.ServiceOptions;

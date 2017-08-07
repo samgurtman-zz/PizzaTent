@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
+/**
+ * Please see http://project-osrm.org/docs/v5.9.1/api/#trip-service for JSON spec
+ */
 class OsrmTripResponse {
     private String code;
 

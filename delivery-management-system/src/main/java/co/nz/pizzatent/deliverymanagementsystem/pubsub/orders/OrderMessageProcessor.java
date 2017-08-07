@@ -1,6 +1,6 @@
 package co.nz.pizzatent.deliverymanagementsystem.pubsub.orders;
 
-import co.nz.pizzatent.deliverymanagementsystem.TypedConsumer;
+import co.nz.pizzatent.deliverymanagementsystem.pubsub.TypedConsumer;
 import co.nz.pizzatent.deliverymanagementsystem.service.ordering.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 
+/**
+ * Processes incoming pubsub order messages
+ */
 @Component
 public class OrderMessageProcessor implements TypedConsumer<OrderMessage> {
 
