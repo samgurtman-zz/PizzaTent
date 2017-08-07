@@ -102,6 +102,60 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.20</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <id>nz-osm</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://download.geofabrik.de/australia-oceania/new-zealand-latest.osm.pbf</url>
+                            <unpack>false</unpack>
+                            <outputDirectory>dev-environment/data/osrm/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.21.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <alias>webapp</alias>
+                            <name>dev-compose</name>
+                            <external>
+                                <type>compose</type>
+                                <basedir>dev-environment</basedir>
+                                <composeFile>docker-compose.yml</composeFile>
+                            </external>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
     </build>
