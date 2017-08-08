@@ -15,7 +15,7 @@ import java.util.Set;
 
 @ActiveProfiles("development")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 public class RoutingServiceIT {
 
 
