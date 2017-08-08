@@ -151,6 +151,7 @@
                             <arguments>
                                 <argument>up</argument>
                                 <argument>-d</argument>
+                                <argument>--no-recreate</argument>
                             </arguments>
                         </configuration>
                     </execution>
